@@ -1,0 +1,13 @@
+name: Pypi Analysis on BigQuery
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  run-query:
+    environment:
+      name: Production
