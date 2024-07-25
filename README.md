@@ -1,15 +1,43 @@
-# Python Application
+## Google Cloud BigQuery: BigQuery SQL Repository
+![Project Status](https://img.shields.io/badge/status-done-green?style=for-the-badge&logo=github)
+![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge&logo=mit)
 
-![Project Status](https://img.shields.io/badge/status-done-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-blue) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/IvanildoBarauna/python-template) ![Python Version](https://img.shields.io/badge/python-3.9-blue) ![GitHub Workflow Status](https://github.com/IvanildoBarauna/python-template/actions/workflows/CI-CD.yaml/badge.svg)
-[![codecov](https://codecov.io/gh/IvanildoBarauna/python-template/branch/main/graph/badge.svg?token=GEGNHFM6P)](https://codecov.io/gh/IvanildoBarauna/python-template)
+[![GCP-DEPLOY](https://img.shields.io/github/actions/workflow/status/IvanildoBarauna/bigquery-execute/deploy-cloud-run.yaml?&style=for-the-badge&logo=google&cacheSeconds=60&label=Deploy)](https://github.com/IvanildoBarauna/GCP-streaming-pipeline/actions/workflows/bigquery-executor.yaml)
 
-## Code Coverage KPI Graph
+## Project Summary
 
-[![codecov](https://codecov.io/gh/IvanildoBarauna/python-template/graphs/sunburst.svg?token=GEGNHFM6PS)](https://codecov.io/gh/IvanildoBarauna/python-template)
+This project contains SQL scripts for creating and managing BigQuery tables, views, and other objects. It is intended to be used as a repository for storing and sharing SQL code across multiple projects.
 
-## Project Stack
+## Development Stack
 
-<img src="https://github.com/devicons/devicon/blob/master/icons/python/python-original.svg" Alt="Python" width="50" height="50"> <img src="https://github.com/devicons/devicon/blob/master/icons/docker/docker-original.svg" Alt="Docker" width="50" height="50"> <img src="https://github.com/devicons/devicon/blob/master/icons/poetry/poetry-original.svg" Alt="Poetry" width="50" height="50"> <img src="https://github.com/devicons/devicon/blob/master/icons/githubactions/githubactions-original.svg" Alt="GitHub Actions" width="50" height="50">
+[![My Skills](https://skillicons.dev/icons?i=pycharm,github,gcp&perline=7)](https://skillicons.dev)
 
-## Descrição do Projeto
+## Cloud Stack (GCP)
+<img src="docs/icons/bigquery.png" Alt="BigQuery" width="50" height="50"><img src="docs/icons/iam.png" Alt="BigQuery" width="50" height="50">
+
+- Cloud IAM: Identity and Access Management (IAM) service provided by GCP for managing user access to cloud resources.
+- BigQuery: Fully managed, serverless data warehouse provided by GCP for storing and analyzing large datasets.
+
+## Continuous Integration and Continuous Deployment (CI/CD, DevOps)
+![My Skills](https://skillicons.dev/icons?i=githubactions)
+
+
+
+## Contributing
+
+See the following docs:
+
+- [Contributing Guide](https://github.com/IvanildoBarauna/GCP-streaming-pipeline/blob/main/CONTRIBUTING.md)
+- [Code Of Conduct](https://github.com/IvanildoBarauna/GCP-streaming-pipeline/blob/main/CODE_OF_CONDUCT.md)
+
+## Project Highlights:
+
+- Modular Architecture: Separation of SQL files and execution scripts for easier maintenance and updates.
+
+- Automated SQL Execution: GitHub Actions workflows to automatically execute SQL scripts on BigQuery based on defined triggers.
+
+- Configuration Management: Use of environment variables and configuration files for managing execution parameters and credentials.
+
+- CI/CD Pipelines: Automated build, test, and deployment processes using GitHub Actions to keep SQL scripts up-to-date.
+
+- Comprehensive Documentation: Detailed documentation including installation instructions, usage examples, and troubleshooting guides.
