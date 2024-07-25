@@ -34,4 +34,5 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
 
     environment:
-      name: Production
+      name: pypi-analysis-executor
+      url: https://lookerstudio.google.com/reporting/5ad2e105-8aba-4454-a2d1-9aac14d68ee8/page/YQ6oD
