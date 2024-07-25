@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "python-application"
+name = "bigquery-execute"
 version = "v1.0.0"
-description = "Python Application"
+description = "SQL scripts for execution in personal BigQuery projects."
 authors = ["IvanildoBarauna <ivanildo.jnr@outlook.com>"]
 readme = "README.md"
 license = "MIT"
@@ -9,8 +9,6 @@ packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pytest = "^8.3.1"
-coverage = "^7.6.0"
 
 [build-system]
 requires = ["poetry-core"]
