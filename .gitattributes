@@ -1,2 +1,2 @@
 *.sql linguist-language=SQL
-*.sh linguist-language=Shell
+*.sh linguist-language=SQL
