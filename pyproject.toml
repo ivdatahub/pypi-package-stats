@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "pypi-package-stats"
+version = "0.1.0"
+description = "For send BigQuery Data to DataDog"
+authors = ["Ivanildo Barauna de Souza Junior <ivanildo.jnr@outlook.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+google-cloud-secret-manager = "^2.20.2"
+datadog = "^0.49.1"
+google-cloud-bigquery = "^3.25.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+coverage = "^7.6.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
