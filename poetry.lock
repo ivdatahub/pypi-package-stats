@@ -217,18 +217,27 @@ files = [
 toml = ["tomli"]
 
 [[package]]
-name = "datadog"
-version = "0.49.1"
-description = "The Datadog Python library"
+name = "datadog-api-client"
+version = "2.27.0"
+description = "Collection of all Datadog Public endpoints"
 optional = false
-python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
+python-versions = ">=3.7"
 files = [
-    {file = "datadog-0.49.1-py2.py3-none-any.whl", hash = "sha256:4a56d57490ea699a0dfd9253547485a57b4120e93489defadcf95c66272374d6"},
-    {file = "datadog-0.49.1.tar.gz", hash = "sha256:4cb7a7991af6cadb868fe450cd456473e65f11fc678b7d7cf61044ff1c6074d8"},
+    {file = "datadog_api_client-2.27.0-py3-none-any.whl", hash = "sha256:8d0d96fa6930e7556644a1d6f6f8cde4102055851c5f55d4e5c0e7ea54e2206b"},
+    {file = "datadog_api_client-2.27.0.tar.gz", hash = "sha256:902dd264feaf74fd8749897497f01d7f47e2190dc4362765fec805c197e498cc"},
 ]
 
 [package.dependencies]
-requests = ">=2.6.0"
+certifi = "*"
+python-dateutil = "*"
+typing-extensions = ">=4.0.0"
+urllib3 = ">=1.15"
+
+[package.extras]
+apm = ["ddtrace (>=1.15.0)"]
+async = ["aiosonic (==0.15.1)"]
+tests = ["aiosonic (==0.15.1)", "glom", "jinja2", "mypy", "pytest (<8.0.0)", "pytest-asyncio", "pytest-bdd (==6.0.1)", "pytest-randomly", "pytest-recording", "python-dateutil", "types-python-dateutil", "zstandard"]
+zstandard = ["zstandard"]
 
 [[package]]
 name = "exceptiongroup"
@@ -775,6 +784,17 @@ files = [
 ]
 
 [[package]]
+name = "typing-extensions"
+version = "4.12.2"
+description = "Backported and Experimental Type Hints for Python 3.8+"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "typing_extensions-4.12.2-py3-none-any.whl", hash = "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d"},
+    {file = "typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8"},
+]
+
+[[package]]
 name = "urllib3"
 version = "2.2.2"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -794,4 +814,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "192b977c387d737c66018e40ce0f9e96efaf354faa05c92955357c1b984f024c"
+content-hash = "d2b428db3586b82a15dee2edfdc99f9134bbb2dc513ea8b0e318463ccd85de78"

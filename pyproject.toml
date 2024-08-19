@@ -10,8 +10,8 @@ packages = [{ include = "src"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 google-cloud-secret-manager = "^2.20.2"
-datadog = "^0.49.1"
 google-cloud-bigquery = "^3.25.0"
+datadog-api-client = "^2.27.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.2"
