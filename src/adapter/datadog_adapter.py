@@ -33,6 +33,9 @@ class DataDogAPIAdapter(MetricsPort):
         return GetSecretValueUseCase(secret_id="datadog-pypi-package-stats").get()
 
     def increment(self):
+        ts_now = int(datetime.now().timestamp())
+        ts_passed = int((datetime.now() - timedelta(minutes=30)).timestamp())
+
         body = MetricPayload(
             series=[
                 MetricSeries(
