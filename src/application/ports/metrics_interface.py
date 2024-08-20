@@ -9,7 +9,6 @@ class MetricsPort(ABC):
         tags: list,
         value: int,
         timestamp: float,
-        is_historical_metrics: bool,
     ):
         pass
 
