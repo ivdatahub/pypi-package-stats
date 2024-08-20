@@ -24,7 +24,7 @@ class DataDogAdapter(MetricsPort):
     def get_dd_api_key(self):
         return GetSecretValueUseCase(secret_id="datadog-pypi-package-stats").get()
 
-    def increment(self):
+    def increment_old(self):
         ts_now = int(datetime.now().timestamp())
         ts_passed = int((datetime.now() - timedelta(minutes=30)).timestamp())
 
