@@ -1,51 +1,58 @@
-"""
-Submit metrics returns "Payload accepted" response
-"""
+## This is the adapter class for the DataDog
 import time
 from datetime import datetime, timedelta
 import random
+
 from datadog_api_client import ApiClient, Configuration
 from datadog_api_client.v2.api.metrics_api import MetricsApi
 from datadog_api_client.v2.model.metric_intake_type import MetricIntakeType
 from datadog_api_client.v2.model.metric_payload import MetricPayload
 from datadog_api_client.v2.model.metric_point import MetricPoint
-from datadog_api_client.v2.model.metric_resource import MetricResource
 from datadog_api_client.v2.model.metric_series import MetricSeries
+from src.application.ports.metrics_interface import MetricsPort
+from src.application.use_cases.get_secrets import GetSecretValueUseCase
 
-from src.application.ports.metrics import MetricsPort
 
+class DataDogAPIAdapter(MetricsPort):
+    def __init__(
+        self,
+        metric_name: str,
+        tags: list,
+        value: int,
+        timestamp=datetime.now().timestamp(),
+    ):
+        self.metric_name = metric_name
+        self.tags = tags
+        self.value = value
+        self.timestamp = timestamp
 
-class DataDogAdapter(MetricsPort):
-    def increment(self, metric_name: str, tags: list, value: int):
+    def get_dd_api_key(self):
+        return GetSecretValueUseCase(secret_id="datadog-pypi-package-stats").get()
+
+    def get_dd_agent(self):
+        return GetSecretValueUseCase(secret_id="datadog-agent-server-address").get()
+
+    def increment(self):
         body = MetricPayload(
             series=[
                 MetricSeries(
-                    metric=metric_name,
+                    metric=self.metric_name,
                     type=MetricIntakeType.COUNT,
                     points=[
                         MetricPoint(
                             # """ Add historical timestamp here """
-                            timestamp=int(
-                                (datetime.now() - timedelta(hours=24)).timestamp()
-                            ),
+                            timestamp=int(self.timestamp),
                             # """ *********************** """
-                            value=value,
+                            value=self.value,
                         ),
                     ],
-                    resources=[
-                        MetricResource(
-                            name="dummyhost",
-                            type="host",
-                        ),
-                    ],
+                    tags=self.tags,
                 ),
             ],
         )
 
         configuration = Configuration()
-        configuration.debug = True
-        configuration.api_key["apiKeyAuth"] = "x"
-        configuration.api_key["appKeyAuth"] = "y"
+        configuration.api_key["apiKeyAuth"] = self.get_dd_api_key()
         with ApiClient(configuration) as api_client:
             api_instance = MetricsApi(api_client)
             response = api_instance.submit_metrics(body=body)
@@ -53,10 +60,11 @@ class DataDogAdapter(MetricsPort):
             if response.to_dict()["errors"]:
                 raise Exception(response.to_dict()["errors"])
 
+            return response
 
-for i in range(10):
-    print("sending: ", i)
-    DataDogAdapter().increment(
-        metric_name="local_metric", tags=["env:test"], value=random.randint(1001, 2000)
-    )
-    time.sleep(60)
+
+DataDogAPIAdapter(
+    metric_name="pypi.package",
+    tags=["package:datadog-api-client", "action:downloads", "env:test"],
+    value=1,
+).increment()
