@@ -61,3 +61,10 @@ class DataDogAPIAdapter(MetricsPort):
                 raise Exception(response.to_dict()["errors"])
 
             return response
+
+
+DataDogAPIAdapter(
+    metric_name="pypi.package",
+    tags=["package:datadog-api-client", "action:downloads", "env:test"],
+    value=1,
+).increment()
