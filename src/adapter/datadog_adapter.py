@@ -29,9 +29,6 @@ class DataDogAPIAdapter(MetricsPort):
     def get_dd_api_key(self):
         return GetSecretValueUseCase(secret_id="datadog-pypi-package-stats").get()
 
-    def get_dd_agent(self):
-        return GetSecretValueUseCase(secret_id="datadog-agent-server-address").get()
-
     def increment(self):
         body = MetricPayload(
             series=[
@@ -53,6 +50,7 @@ class DataDogAPIAdapter(MetricsPort):
 
         configuration = Configuration()
         configuration.api_key["apiKeyAuth"] = self.get_dd_api_key()
+        configuration.debug = True
         with ApiClient(configuration) as api_client:
             api_instance = MetricsApi(api_client)
             response = api_instance.submit_metrics(body=body)
@@ -63,8 +61,8 @@ class DataDogAPIAdapter(MetricsPort):
             return response
 
 
-DataDogAPIAdapter(
+print(DataDogAPIAdapter(
     metric_name="pypi.package",
     tags=["package:datadog-api-client", "action:downloads", "env:test"],
     value=1,
-).increment()
+).increment())
