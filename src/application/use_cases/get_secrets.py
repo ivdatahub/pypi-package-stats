@@ -4,9 +4,9 @@ from src.application.utils.singleton import Singleton
 
 
 class GetSecretValueUseCase:
-    def __init__(self, secret_id: str) -> None:
-        self.repository = SecretManagerAdapter(secret_id=secret_id)
+    def __init__(self) -> None:
+        self.repository = SecretManagerAdapter()
         self.secret_service = GetSecretValueService(secret_manager=self.repository)
 
-    def get(self) -> str:
-        return self.secret_service.get()
+    def get(self, secret_id: str) -> str:
+        return self.secret_service.get(secret_id=secret_id)

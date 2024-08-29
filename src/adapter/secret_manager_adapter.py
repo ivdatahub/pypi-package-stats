@@ -3,16 +3,14 @@ from src.application.ports.secret_manager_interface import ISecretManager
 
 
 class SecretManagerAdapter(ISecretManager):
-    def __init__(self, secret_id: str):
-        self.secret_id = secret_id
+    def __init__(self):
+        self.secret_client = secretmanager.SecretManagerServiceClient()
 
-    def get_secret_value(self) -> str:
-        secret_client = secretmanager.SecretManagerServiceClient()
-
+    def get_secret_value(self, secret_id: str) -> str:
         request = {
-            "name": f"projects/ivanildobarauna/secrets/{self.secret_id}/versions/latest",
+            "name": f"projects/ivanildobarauna/secrets/{secret_id}/versions/latest",
         }
 
-        secret_request = secret_client.access_secret_version(request=request)
+        secret_request = self.secret_client.access_secret_version(request=request)
 
         return secret_request.payload.data.decode("UTF-8")

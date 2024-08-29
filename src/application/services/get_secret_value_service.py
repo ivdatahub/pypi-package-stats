@@ -6,5 +6,5 @@ class GetSecretValueService:
     def __init__(self, secret_manager: Type[ISecretManager]):
         self.manager = secret_manager
 
-    def get(self) -> str:
-        return self.manager.get_secret_value()
+    def get(self, secret_id: str) -> str:
+        return self.manager.get_secret_value(secret_id=secret_id)

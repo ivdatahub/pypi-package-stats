@@ -1,7 +1,5 @@
 ## This is the adapter class for the DataDog
-import time
-from datetime import datetime, timedelta
-import random
+from datetime import datetime
 
 from datadog_api_client import ApiClient, Configuration
 from datadog_api_client.v2.api.metrics_api import MetricsApi
@@ -14,25 +12,19 @@ from src.application.use_cases.get_secrets import GetSecretValueUseCase
 
 
 class DataDogAPIAdapter(MetricsPort):
-    def __init__(
-        self,
-        metric_name: str,
-        tags: list,
-        value: int,
-        timestamp=datetime.now().timestamp(),
-    ):
+    def __init__(self, metric_name: str):
         self.metric_name = metric_name
-        self.tags = tags
-        self.value = value
-        self.timestamp = timestamp
+        self.secret_manager = GetSecretValueUseCase()
+        self.dd_host = self._get_dd_host()
+        self.dd_api_key = self._get_dd_api_key()
 
-    def get_dd_api_key(self):
-        return GetSecretValueUseCase(secret_id="datadog-pypi-package-stats").get()
+    def _get_dd_api_key(self):
+        return self.secret_manager.get(secret_id="datadog-pypi-package-stats")
 
-    def get_dd_host(self):
-        return GetSecretValueUseCase(secret_id="datadog-host").get()
+    def _get_dd_host(self):
+        return self.secret_manager.get(secret_id="datadog-host")
 
-    def increment(self):
+    def increment(self, tags: list, value: int, timestamp=datetime.now().timestamp()):
         body = MetricPayload(
             series=[
                 MetricSeries(
@@ -41,19 +33,19 @@ class DataDogAPIAdapter(MetricsPort):
                     points=[
                         MetricPoint(
                             # """ Add historical timestamp here """
-                            timestamp=int(self.timestamp),
+                            timestamp=int(timestamp),
                             # """ *********************** """
-                            value=self.value,
+                            value=value,
                         ),
                     ],
-                    tags=self.tags,
+                    tags=tags,
                 ),
             ],
         )
 
         configuration = Configuration()
-        configuration.api_key["apiKeyAuth"] = self.get_dd_api_key()
-        configuration.host = self.get_dd_host()
+        configuration.api_key["apiKeyAuth"] = self.dd_api_key
+        configuration.host = self.dd_host
         configuration.debug = True
         configuration.enable_retry = True
         configuration.max_retries = 3
