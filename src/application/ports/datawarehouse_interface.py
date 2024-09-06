@@ -8,5 +8,5 @@ from pandas.core.frame import DataFrame
 
 class DataWarehousePort(ABC):
     @abstractmethod
-    def fetch_dataframe(self, query: str) -> Type[DataFrame]:
+    def query_execute(self, query: str):
         pass

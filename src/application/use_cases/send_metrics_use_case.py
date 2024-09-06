@@ -1,4 +1,4 @@
-from src.application.services.get_data_from_dw_service import GetDataFromDWService
+from src.application.services.dw_query_execute_service import QueryExecuteService
 from src.application.services.send_metrics_service import SendMetricsService
 
 from src.adapter.bigquery_adapter import BigQueryAdapter
@@ -9,7 +9,7 @@ from pandas.core.frame import DataFrame
 
 class SendPypiStatsUseCase:
     def __init__(self):
-        self.get_data_from_dw_service = GetDataFromDWService(
+        self.get_data_from_dw_service = QueryExecuteService(
             datawarehouse=BigQueryAdapter()
         )
         self.send_metrics_service = SendMetricsService(
@@ -19,10 +19,18 @@ class SendPypiStatsUseCase:
     def get_stats(self, package_name: str):
         query = f"""
             SELECT
-            CAST(UNIX_SECONDS(TIMESTAMP(DTTM)) as FLOAT64) DTTM, COUNTRY_CODE, PROJECT, PACKAGE_VERSION, INSTALLER_NAME, PYTHON_VERSION, TOTAL_DOWNLOADS
+            ID,
+            CAST(UNIX_SECONDS(TIMESTAMP(DTTM)) as FLOAT64) DTTM,
+            COUNTRY_CODE,
+            PROJECT,
+            PACKAGE_VERSION,
+            INSTALLER_NAME,
+            PYTHON_VERSION,
+            TOTAL_DOWNLOADS
             FROM `ivanildobarauna.DW.PYPI_PROJ`
             WHERE PROJECT = '{package_name}'
-            AND PUSHED is null limit 1
+            AND PUSHED is null 
+            order by DTTM limit 1
             """
         return self.get_data_from_dw_service.execute(query=query)
 
@@ -41,3 +49,15 @@ class SendPypiStatsUseCase:
                 value=row["TOTAL_DOWNLOADS"],
                 timestamp=row["DTTM"],
             )
+
+            self._update_dw(id=row["ID"], project_name=row["PROJECT"])
+
+    def _update_dw(self, id: int, project_name: str):
+        query = f"""
+            UPDATE `ivanildobarauna.DW.PYPI_PROJ`
+            SET PUSHED = true
+            WHERE ID = {id}
+            and PROJECT = '{project_name}'
+            AND PUSHED is null
+            """
+        self.get_data_from_dw_service.execute(query=query)

@@ -14,7 +14,12 @@ class DataDogAPIAdapter(MetricsPort):
         self.metric_name = metric_name
         self.secret_manager = GetSecretValueUseCase()
         self.dd_host = self._get_dd_host()
-        self.dd_api_key = self._get_dd_api_key()
+        self.configuration = Configuration()
+        self.configuration.api_key["apiKeyAuth"] = self._get_dd_api_key()
+        self.configuration.host = self.dd_host
+        self.configuration.debug = True
+        self.configuration.enable_retry = True
+        self.configuration.max_retries = 3
 
     def _get_dd_api_key(self):
         return self.secret_manager.get(secret_id="datadog-pypi-package-stats")
@@ -41,17 +46,14 @@ class DataDogAPIAdapter(MetricsPort):
             ],
         )
 
-        configuration = Configuration()
-        configuration.api_key["apiKeyAuth"] = self.dd_api_key
-        configuration.host = self.dd_host
-        configuration.debug = True
-        configuration.enable_retry = True
-        configuration.max_retries = 3
-        with ApiClient(configuration) as api_client:
-            api_instance = MetricsApi(api_client)
-            response = api_instance.submit_metrics(body=body)
+        try:
+            with ApiClient(self.configuration) as api_client:
+                api_instance = MetricsApi(api_client)
+                response = api_instance.submit_metrics(body=body)
+        except Exception as e:
+            raise Exception(f"Exception when calling MetricsApi->ContextManager: {e}")
 
-            if response.to_dict()["errors"]:
-                raise Exception(response.to_dict()["errors"])
+        if response.to_dict()["errors"]:
+            raise Exception(response.to_dict()["errors"])
 
-            return response
+        return response
