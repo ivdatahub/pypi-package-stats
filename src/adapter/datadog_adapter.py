@@ -1,6 +1,4 @@
-## This is the adapter class for the DataDog
 from datetime import datetime
-
 from datadog_api_client import ApiClient, Configuration
 from datadog_api_client.v2.api.metrics_api import MetricsApi
 from datadog_api_client.v2.model.metric_intake_type import MetricIntakeType
@@ -9,6 +7,7 @@ from datadog_api_client.v2.model.metric_point import MetricPoint
 from datadog_api_client.v2.model.metric_series import MetricSeries
 from src.application.ports.metrics_interface import MetricsPort
 from src.application.use_cases.get_secrets import GetSecretValueUseCase
+
 
 
 class DataDogAPIAdapter(MetricsPort):

@@ -1,4 +1,4 @@
-from application.use_cases.send_metrics_use_case import SendPypiStatsUseCase
+from src.application.use_cases.send_metrics_use_case import SendPypiStatsUseCase
 
 if __name__ == "__main__":
     send_pypi_stats_use_case = SendPypiStatsUseCase()

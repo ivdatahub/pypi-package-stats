@@ -13,7 +13,7 @@ class BigQueryAdapter(DataWarehousePort):
     def __init__(self):
         self.bigquery_conn = bigquery.Client()
 
-    def get_data(self, query: str) -> Type[DataFrame]:
+    def fetch_dataframe(self, query: str) -> Type[DataFrame]:
         """
         Get data from BigQuery
         """
