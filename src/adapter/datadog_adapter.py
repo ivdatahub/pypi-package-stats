@@ -9,7 +9,6 @@ from src.application.ports.metrics_interface import MetricsPort
 from src.application.use_cases.get_secrets import GetSecretValueUseCase
 
 
-
 class DataDogAPIAdapter(MetricsPort):
     def __init__(self, metric_name: str):
         self.metric_name = metric_name
