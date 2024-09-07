@@ -14,10 +14,9 @@ class DataDogAPIAdapter(MetricsPort):
     def __init__(self, metric_name: str):
         self.metric_name = metric_name
         self.secret_manager = GetSecretValueUseCase()
-        self.dd_host = self._get_dd_host()
         self.configuration = Configuration()
         self.configuration.api_key["apiKeyAuth"] = self._get_dd_api_key()
-        self.configuration.host = self.dd_host
+        self.configuration.host = self._get_dd_host()
         self.configuration.debug = True
         self.configuration.enable_retry = True
         self.configuration.max_retries = 3
