@@ -1,4 +1,4 @@
-from typing import Type
+from typing import Tuple, Optional, Type
 from src.application.ports.metrics_interface import MetricsPort
 
 
@@ -11,5 +11,7 @@ class SendMetricsService:
         tags: list,
         value: int,
         timestamp: float,
-    ):
-        self.metrics_repository.increment(tags=tags, value=value, timestamp=timestamp)
+    ) -> Tuple[str, Optional[str]]:
+        return self.metrics_repository.increment(
+            tags=tags, value=value, timestamp=timestamp
+        )

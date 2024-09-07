@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Tuple, Optional
 from datadog_api_client import ApiClient, Configuration
 from datadog_api_client.v2.api.metrics_api import MetricsApi
 from datadog_api_client.v2.model.metric_intake_type import MetricIntakeType
@@ -27,7 +28,7 @@ class DataDogAPIAdapter(MetricsPort):
     def _get_dd_host(self):
         return self.secret_manager.get(secret_id="datadog-host")
 
-    def increment(self, tags: list, value: int, timestamp=datetime.now().timestamp()):
+    def increment(self, tags: list, value: int, timestamp) -> Tuple[str, Optional[str]]:
         body = MetricPayload(
             series=[
                 MetricSeries(
@@ -51,9 +52,9 @@ class DataDogAPIAdapter(MetricsPort):
                 api_instance = MetricsApi(api_client)
                 response = api_instance.submit_metrics(body=body)
         except Exception as e:
-            raise Exception(f"Exception when calling MetricsApi->ContextManager: {e}")
+            return "", str(e)
 
         if response.to_dict()["errors"]:
-            raise Exception(response.to_dict()["errors"])
+            return "", response.to_str()
 
-        return response
+        return response, None

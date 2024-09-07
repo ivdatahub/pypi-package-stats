@@ -44,11 +44,15 @@ class SendPypiStatsUseCase:
                 f"python_version:{row['PYTHON_VERSION']}",
             ]
 
-            self.send_metrics_service.send(
+            result, err = self.send_metrics_service.send(
                 tags=tags,
                 value=row["TOTAL_DOWNLOADS"],
                 timestamp=row["DTTM"],
             )
+
+            if err:
+                print(f"Error: {err}")
+                raise Exception(err)
 
             self._update_dw(id=row["ID"], project_name=row["PROJECT"])
 
