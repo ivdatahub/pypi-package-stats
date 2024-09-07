@@ -41,7 +41,7 @@ class SendPypiStatsUseCase:
                 f"project:{row['PROJECT']}",
                 f"package_version:{row['PACKAGE_VERSION']}",
                 f"installer_name:{row['INSTALLER_NAME']}",
-                f"python_version:{row['PYTHON_VERSION']}",
+                f"python_version:{row['PYTHON_VERSION']}"
             ]
 
             result, err = self.send_metrics_service.send(

@@ -1,4 +1,3 @@
-from typing import Tuple, Optional
 from src.application.services.get_secret_value_service import GetSecretValueService
 from src.adapter.secret_manager_adapter import SecretManagerAdapter
 
@@ -14,7 +13,7 @@ class GetSecretValueUseCase:
             secret_manager=self.secretmanager
         )
 
-    def get(self, secret_id: str) -> Tuple[Optional[str], str]:
+    def get(self, secret_id: str) -> str:
         """
         Get secret value
         """
@@ -23,4 +22,4 @@ class GetSecretValueUseCase:
         if err:
             raise Exception(err)
 
-        return None, secret_value
+        return secret_value
