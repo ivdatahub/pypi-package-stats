@@ -17,7 +17,7 @@ class DataDogAPIAdapter(MetricsPort):
         self.configuration = Configuration()
         self.configuration.api_key["apiKeyAuth"] = self._get_dd_api_key()
         self.configuration.host = self._get_dd_host()
-        self.configuration.debug = True
+        self.configuration.debug = False
         self.configuration.enable_retry = True
         self.configuration.max_retries = 3
 
@@ -56,4 +56,5 @@ class DataDogAPIAdapter(MetricsPort):
         if response.to_dict()["errors"]:
             return "", response.to_str()
 
-        return response, None
+        print("Sended metrics with body: ", body)
+        return response.to_str()

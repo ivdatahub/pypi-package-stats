@@ -1,4 +1,4 @@
-from src.application.services.dw_query_execute_service import QueryExecuteService
+from src.application.services.dw_service import DWService
 from src.application.services.send_metrics_service import SendMetricsService
 
 from src.adapter.bigquery_adapter import BigQueryAdapter
@@ -9,7 +9,7 @@ from pandas.core.frame import DataFrame
 
 class SendPypiStatsUseCase:
     def __init__(self):
-        self.get_data_from_dw_service = QueryExecuteService(
+        self.get_data_from_dw_service = DWService(
             datawarehouse=BigQueryAdapter()
         )
         self.send_metrics_service = SendMetricsService(
@@ -32,7 +32,7 @@ class SendPypiStatsUseCase:
             AND PUSHED is null 
             order by DTTM limit 1
             """
-        return self.get_data_from_dw_service.execute(query=query)
+        return self.get_data_from_dw_service.query_to_dataframe(query=query)
 
     def send_stats(self, df: DataFrame):
         for index, row in df.iterrows():
@@ -56,6 +56,7 @@ class SendPypiStatsUseCase:
 
             self._update_dw(id=row["ID"], project_name=row["PROJECT"])
 
+
     def _update_dw(self, id: int, project_name: str):
         query = f"""
             UPDATE `ivanildobarauna.DW.PYPI_PROJ`
@@ -64,4 +65,4 @@ class SendPypiStatsUseCase:
             and PROJECT = '{project_name}'
             AND PUSHED is null
             """
-        self.get_data_from_dw_service.execute(query=query)
+        return self.get_data_from_dw_service.query_execute(query=query)
