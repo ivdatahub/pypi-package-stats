@@ -232,13 +232,13 @@ requests = ">=2.6.0"
 
 [[package]]
 name = "datadog-api-client"
-version = "2.27.0"
+version = "2.28.0"
 description = "Collection of all Datadog Public endpoints"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "datadog_api_client-2.27.0-py3-none-any.whl", hash = "sha256:8d0d96fa6930e7556644a1d6f6f8cde4102055851c5f55d4e5c0e7ea54e2206b"},
-    {file = "datadog_api_client-2.27.0.tar.gz", hash = "sha256:902dd264feaf74fd8749897497f01d7f47e2190dc4362765fec805c197e498cc"},
+    {file = "datadog_api_client-2.28.0-py3-none-any.whl", hash = "sha256:104b97574cd4704274aba54dcf4d9628561602d83f2bea29d7591bb6b3acc2a9"},
+    {file = "datadog_api_client-2.28.0.tar.gz", hash = "sha256:5748dc0beeff9f8d408bd87d62deb0f4c3019e46202dbbcd1b57e47495ded53f"},
 ]
 
 [package.dependencies]
@@ -828,4 +828,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "56d5b972b62d3c0e86617a97ca6ed14c58660286c6626bd11a97b5c299a36ec6"
+content-hash = "507c174ab851acf8891dcb0470c3310b060293c49e2ff77e4988bd820259bae2"
