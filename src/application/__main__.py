@@ -7,4 +7,3 @@ if __name__ == "__main__":
     print("Sending stats to DataDog...")
     send_pypi_stats_use_case.send_stats(df=df)
     print("Done!")
-
