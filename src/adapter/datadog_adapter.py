@@ -1,4 +1,6 @@
+import os
 from datetime import datetime
+from dotenv import load_dotenv
 from typing import Tuple, Optional
 from datadog_api_client import ApiClient, Configuration
 from datadog_api_client.v2.api.metrics_api import MetricsApi
@@ -9,13 +11,15 @@ from datadog_api_client.v2.model.metric_series import MetricSeries
 from src.application.ports.metrics_interface import MetricsPort
 from src.application.use_cases.get_secrets import GetSecretValueUseCase
 
+load_dotenv()
+
 
 class DataDogAPIAdapter(MetricsPort):
     def __init__(self, metric_name: str):
         self.metric_name = metric_name
         self.secret_manager = GetSecretValueUseCase()
         self.configuration = Configuration()
-        self.configuration.api_key["apiKeyAuth"] = self._get_dd_api_key()
+        self.configuration.api_key["apiKeyAuth"] = os.getenv("DATADOG_API_KEY")
         self.configuration.host = self._get_dd_host()
         self.configuration.debug = False
         self.configuration.enable_retry = True
