@@ -1,9 +1,6 @@
 name: Pypi Analysis on BigQuery
 
 on:
-  schedule:
-    - cron: '0 9,12,16,18,21 * * *'
-
   workflow_dispatch:
 
 env:
