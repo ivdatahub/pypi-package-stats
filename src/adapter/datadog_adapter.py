@@ -10,6 +10,7 @@ from datadog_api_client.v2.model.metric_point import MetricPoint
 from datadog_api_client.v2.model.metric_series import MetricSeries
 from src.application.ports.metrics_interface import MetricsPort
 from src.application.use_cases.get_secrets import GetSecretValueUseCase
+from src.application.utils.logger_module import logger, log_extra_info, LogStatus
 
 load_dotenv()
 
@@ -55,10 +56,31 @@ class DataDogAPIAdapter(MetricsPort):
                 api_instance = MetricsApi(api_client)
                 response = api_instance.submit_metrics(body=body)
         except Exception as e:
+            logger.error(
+                "API Client error sending metrics to DataDog",
+                extra=log_extra_info(
+                    status=LogStatus.ERROR,
+                    msg=f"Error sending metrics to DataDog: {str(e)}",
+                ),
+            )
             return "", str(e)
 
         if response.to_dict()["errors"]:
+            logger.error(
+                "Response error sending metrics to DataDog",
+                extra=log_extra_info(
+                    status=LogStatus.ERROR,
+                    msg=f"Error sending metrics to DataDog: {str(e)}",
+                ),
+            )
+
             return "", response.to_str()
 
-        print("Sended metrics with body: ", body)
+        logger.info(
+            "Metrics sent to DataDog",
+            extra=log_extra_info(
+                status=LogStatus.SUCCESS,
+                msg=f"Metrics sent to DataDog: {response.to_str()}",
+            ),
+        )
         return response.to_str()
