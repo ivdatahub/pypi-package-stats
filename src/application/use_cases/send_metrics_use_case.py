@@ -30,7 +30,7 @@ class SendPypiStatsUseCase:
             INSTALLER_NAME,
             PYTHON_VERSION,
             TOTAL_DOWNLOADS
-            FROM {os.getenv("PROJECT_ID")}.STG.PYPI_PROJ_DOWNLOADS
+            FROM {os.getenv('PROJECT_ID')}.STG.PYPI_PROJ_DOWNLOADS
             WHERE PROJECT = '{package_name}'
             AND PUSHED is null
             order by DTTM limit 1
