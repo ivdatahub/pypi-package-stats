@@ -21,7 +21,7 @@ class DataDogAPIAdapter(MetricsPort):
         self.secret_manager = GetSecretValueUseCase()
         self.configuration = Configuration()
         self.configuration.api_key["apiKeyAuth"] = os.getenv("DATADOG_API_KEY")
-        self.configuration.host = ""
+        self.configuration.host = os.getenv("DATADOG_HOST")
         self.configuration.debug = False
         self.configuration.enable_retry = True
         self.configuration.max_retries = 3
@@ -79,8 +79,8 @@ class DataDogAPIAdapter(MetricsPort):
         logger.info(
             "Metrics sent to DataDog",
             extra=log_extra_info(
-                status=LogStatus.SUCCESS,
+                status=LogStatus.OK,
                 msg=f"Metrics sent to DataDog: {response.to_str()}",
             ),
         )
-        return response.to_str()
+        return response.to_str(), None

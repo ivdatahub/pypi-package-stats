@@ -19,21 +19,19 @@ class SendPypiStatsUseCase:
             DataDogAPIAdapter(metric_name="pypi")
         )
 
-    def get_stats(self, package_name: str):
+    def get_stats(self):
         query = f"""
             SELECT
-            ID,
-            CAST(UNIX_SECONDS(TIMESTAMP(DTTM)) as FLOAT64) DTTM,
+            DOWNLOAD_ID,
+            CAST(UNIX_SECONDS(TIMESTAMP(DTTM)) AS INT64) DTTM,
             COUNTRY_CODE,
             PROJECT,
             PACKAGE_VERSION,
             INSTALLER_NAME,
-            PYTHON_VERSION,
-            TOTAL_DOWNLOADS
+            PYTHON_VERSION
             FROM {os.getenv('PROJECT_ID')}.STG.PYPI_PROJ_DOWNLOADS
-            WHERE PROJECT = '{package_name}'
-            AND PUSHED is null
-            order by DTTM limit 1
+            WHERE DTTM >= DATETIME_SUB(CURRENT_DATETIME, INTERVAL 1 day)
+            AND NOT PUSHED
             """
         return self.get_data_from_dw_service.query_to_dataframe(query=query)
 
@@ -46,27 +44,30 @@ class SendPypiStatsUseCase:
                 f"installer_name:{row['INSTALLER_NAME']}",
                 f"python_version:{row['PYTHON_VERSION']}",
             ]
+            # 3126033309371667865
 
             result, err = self.send_metrics_service.send(
                 tags=tags,
-                value=row["TOTAL_DOWNLOADS"],
+                value=1,
                 timestamp=row["DTTM"],
             )
 
             if err:
                 raise Exception(str(err))
 
-            result, err = self._update_dw(id=row["ID"], project_name=row["PROJECT"])
+            result, err = self._update_dw(
+                id=row["DOWNLOAD_ID"], project_name=row["PROJECT"]
+            )
 
             if err:
                 raise Exception(str(err))
 
     def _update_dw(self, id: int, project_name: str):
         query = f"""
-            UPDATE `ivanildobarauna.DW.PYPI_PROJ`
+            UPDATE {os.getenv('PROJECT_ID')}.STG.PYPI_PROJ_DOWNLOADS
             SET PUSHED = true
-            WHERE ID = {id}
+            WHERE DOWNLOAD_ID = {id}
             and PROJECT = '{project_name}'
-            AND PUSHED is null
+            AND NOT PUSHED
             """
         return self.get_data_from_dw_service.query_execute(query=query)

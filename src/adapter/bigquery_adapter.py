@@ -1,3 +1,4 @@
+import os
 from google.cloud import bigquery
 from pandas.core.frame import DataFrame
 from typing import Type, Optional, Tuple
@@ -56,7 +57,7 @@ class BigQueryAdapter(DataWarehousePort):
                 "Error executing query",
                 extra=log_extra_info(
                     status=LogStatus.ERROR,
-                    msg=f"Error executing query: {str(e)}",
+                    msg=f"Error executing query: {str(query_job.error_result)}",
                 ),
             )
             return df, str(query_job.error_result)
