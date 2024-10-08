@@ -42,6 +42,17 @@ class BigQueryAdapter(DataWarehousePort):
 
         try:
             query_job = self.bigquery_conn.query(_query)
+            if query_job.errors:
+                logger.error(
+                    "Error executing query",
+                    extra=log_extra_info(
+                        status=LogStatus.ERROR,
+                        msg=f"Error executing query: {str(query_job.error_result)}",
+                    ),
+                )
+                return df, str(query_job.error_result)
+
+            df = query_job.to_dataframe()
         except Exception as e:
             logger.error(
                 "Error executing query",
@@ -51,17 +62,5 @@ class BigQueryAdapter(DataWarehousePort):
                 ),
             )
             return df, str(e)
-
-        if query_job.errors:
-            logger.error(
-                "Error executing query",
-                extra=log_extra_info(
-                    status=LogStatus.ERROR,
-                    msg=f"Error executing query: {str(query_job.error_result)}",
-                ),
-            )
-            return df, str(query_job.error_result)
-
-        df = query_job.to_dataframe()
 
         return df, None

@@ -13,9 +13,18 @@ if __name__ == "__main__":
                 msg=f"Error executing query: {str(e)}",
             ),
         )
-
-    df, err = send_pypi_stats_use_case.get_stats()
-    if err:
+    try:
+        df, err = send_pypi_stats_use_case.get_stats()
+        if err:
+            logger.error(
+                "Error Getting Stats from DW",
+                extra=log_extra_info(
+                    status=LogStatus.ERROR,
+                    msg=str(e),
+                ),
+            )
+            raise Exception(str(err))
+    except Exception as e:
         logger.error(
             "Error Getting Stats from DW",
             extra=log_extra_info(
@@ -23,7 +32,7 @@ if __name__ == "__main__":
                 msg=str(e),
             ),
         )
-        raise Exception(str(err))
+        raise Exception(str(e))
 
     try:
         send_pypi_stats_use_case.send_stats(df=df)
