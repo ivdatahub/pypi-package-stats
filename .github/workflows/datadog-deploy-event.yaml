@@ -8,7 +8,7 @@ on:
       - workflow_trigger
 
 env:
-  folder: ./.github/workflows/scripts/
+  folder: ./.github/scripts/
 
 jobs:
   run-query:
@@ -21,6 +21,7 @@ jobs:
         run: ${{ env.folder }}/send-datadog-event.sh
         env:
           DD_API_KEY: ${{ secrets.DD_API_KEY }}
+          REPOSITORY: ${{ github.event.client_payload.repository }}
 
     environment:
       name: Production
