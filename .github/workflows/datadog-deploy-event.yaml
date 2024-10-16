@@ -3,9 +3,9 @@ name: DataDog Deploy Event
 on:
   workflow_dispatch:
 
-  push:
-    branches:
-      - main
+  repository_dispatch:
+    types:
+      - workflow_trigger
 
 env:
   folder: ./.github/scripts/
