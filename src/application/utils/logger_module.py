@@ -9,5 +9,5 @@ class LogStatus(Enum):
     ERROR = "ERROR"
 
 
-def log_extra_info(status: LogStatus, msg: str):
-    return {"log_type": "custom", "status": status.value, "message": msg}
+def log_extra_info(status: LogStatus):
+    return {"log_type": "custom", "status": status.value}

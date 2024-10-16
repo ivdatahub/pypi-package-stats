@@ -8,29 +8,19 @@ if __name__ == "__main__":
     except Exception as e:
         logger.error(
             "Error Instance of SendPypiStatsUseCase",
-            extra=log_extra_info(
-                status=LogStatus.ERROR,
-                msg=f"Error executing query: {str(e)}",
-            ),
+            extra=log_extra_info(status=LogStatus.ERROR),
         )
     try:
         df, err = send_pypi_stats_use_case.get_stats()
         if err:
             logger.error(
                 "Error Getting Stats from DW",
-                extra=log_extra_info(
-                    status=LogStatus.ERROR,
-                    msg=str(e),
-                ),
+                extra=log_extra_info(status=LogStatus.ERROR),
             )
             raise Exception(str(err))
     except Exception as e:
         logger.error(
-            "Error Getting Stats from DW",
-            extra=log_extra_info(
-                status=LogStatus.ERROR,
-                msg=str(e),
-            ),
+            "Error Getting Stats from DW", extra=log_extra_info(status=LogStatus.ERROR)
         )
         raise Exception(str(e))
 
@@ -39,9 +29,6 @@ if __name__ == "__main__":
     except Exception as e:
         logger.error(
             "Error Sending Stats to DataDog",
-            extra=log_extra_info(
-                status=LogStatus.ERROR,
-                msg=str(e),
-            ),
+            extra=log_extra_info(status=LogStatus.ERROR),
         )
         raise Exception(str(e))

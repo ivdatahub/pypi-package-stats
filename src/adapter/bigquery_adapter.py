@@ -25,11 +25,8 @@ class BigQueryAdapter(DataWarehousePort):
 
         if query_job.errors:
             logger.error(
-                "Error executing query",
-                extra=log_extra_info(
-                    status=LogStatus.ERROR,
-                    msg=f"Error executing query: {str(query_job.error_result)}",
-                ),
+                f"Error executing query: {str(query_job.error_result)}",
+                extra=log_extra_info(status=LogStatus.ERROR),
             )
             return query_job, str(query_job.error_result)
 
@@ -44,22 +41,16 @@ class BigQueryAdapter(DataWarehousePort):
             query_job = self.bigquery_conn.query(_query)
             if query_job.errors:
                 logger.error(
-                    "Error executing query",
-                    extra=log_extra_info(
-                        status=LogStatus.ERROR,
-                        msg=f"Error executing query: {str(query_job.error_result)}",
-                    ),
+                    f"Error executing query {str(query_job.error_result)}",
+                    extra=log_extra_info(status=LogStatus.ERROR),
                 )
                 return df, str(query_job.error_result)
 
             df = query_job.to_dataframe()
         except Exception as e:
             logger.error(
-                "Error executing query",
-                extra=log_extra_info(
-                    status=LogStatus.ERROR,
-                    msg=f"Error executing query: {str(e)}",
-                ),
+                f"Error executing query: {str(e)}",
+                extra=log_extra_info(status=LogStatus.ERROR),
             )
             return df, str(e)
 

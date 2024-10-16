@@ -57,30 +57,21 @@ class DataDogAPIAdapter(MetricsPort):
                 response = api_instance.submit_metrics(body=body)
         except Exception as e:
             logger.error(
-                "API Client error sending metrics to DataDog",
-                extra=log_extra_info(
-                    status=LogStatus.ERROR,
-                    msg=f"Error sending metrics to DataDog: {str(e)}",
-                ),
+                f"API Client error sending metrics to DataDog: {str(e)}",
+                extra=log_extra_info(status=LogStatus.ERROR),
             )
             return "", str(e)
 
         if response.to_dict()["errors"]:
             logger.error(
-                "Response error sending metrics to DataDog",
-                extra=log_extra_info(
-                    status=LogStatus.ERROR,
-                    msg=f"Error sending metrics to DataDog: {str(e)}",
-                ),
+                f"Response error sending metrics to DataDog: {str(e)}",
+                extra=log_extra_info(status=LogStatus.ERROR),
             )
 
             return "", response.to_str()
 
         logger.info(
-            "Metrics sent to DataDog",
-            extra=log_extra_info(
-                status=LogStatus.OK,
-                msg=f"Metrics sent to DataDog: {response.to_str()}",
-            ),
+            "Metrics sent to DataDog: {response.to_str()}",
+            extra=log_extra_info(status=LogStatus.OK),
         )
         return response.to_str(), None
