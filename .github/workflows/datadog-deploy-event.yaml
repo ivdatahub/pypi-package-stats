@@ -8,7 +8,7 @@ on:
       - workflow_trigger
 
 env:
-  folder: ./.github/scripts/
+  folder: ./.github/workflows/scripts/
 
 jobs:
   run-query:
