@@ -32,7 +32,7 @@ class SendPypiStatsUseCase:
             INSTALLER_NAME,
             PYTHON_VERSION
             FROM {os.getenv('PROJECT_ID')}.STG.PYPI_PROJ_DOWNLOADS
-            WHERE DTTM >= DATETIME_SUB(CURRENT_DATETIME, INTERVAL 14 HOUR)
+            WHERE DTTM >= DATETIME_SUB(CURRENT_DATETIME, INTERVAL 2 DAY)
             AND NOT PUSHED
             """
         return self.get_data_from_dw_service.query_to_dataframe(query=query)
@@ -63,12 +63,23 @@ class SendPypiStatsUseCase:
 
             downloads_list.append(row["DOWNLOAD_ID"])
 
-        result, err = self._update_dw(
-            downloads_list=downloads_list, project_name=row["PROJECT"]
-        )
+            if len(downloads_list) == 100:
+                result, err = self._update_dw(
+                    downloads_list=downloads_list, project_name=row["PROJECT"]
+                )
 
-        if err:
-            raise Exception(str(err))
+                if err:
+                    raise Exception(str(err))
+
+                downloads_list = []
+
+        if len(downloads_list) > 0:
+            result, err = self._update_dw(
+                downloads_list=downloads_list, project_name=row["PROJECT"]
+            )
+
+            if err:
+                raise Exception(str(err))
 
     def _update_dw(self, downloads_list: list, project_name: str):
         downloads_list_str = ",".join(map(str, downloads_list))
