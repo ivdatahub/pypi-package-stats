@@ -1,0 +1,26 @@
+name: DataDog Deploy Event
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+
+env:
+  folder: ./.github/scripts/
+
+jobs:
+  run-query:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Increment Deploy Metric
+        run: ${{ env.folder }}/send-datadog-event.sh
+        env:
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+
+    environment:
+      name: Production
