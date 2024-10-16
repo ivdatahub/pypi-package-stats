@@ -25,7 +25,7 @@ class SendPypiStatsUseCase:
         query = f"""
             SELECT
             DOWNLOAD_ID,
-            CAST(UNIX_SECONDS(TIMESTAMP(DTTM)) AS INT64) DTTM,
+            CAST(UNIX_SECONDS(timestamp(TIMESTAMP_ADD(DTTM, INTERVAL 3 HOUR))) AS INT64) DTTM,
             COUNTRY_CODE,
             PROJECT,
             PACKAGE_VERSION,
@@ -33,6 +33,7 @@ class SendPypiStatsUseCase:
             PYTHON_VERSION
             FROM {os.getenv('PROJECT_ID')}.STG.PYPI_PROJ_DOWNLOADS
             WHERE DTTM >= DATETIME_SUB(CURRENT_DATETIME, INTERVAL 2 DAY)
+            AND TRUE QUALIFY (ROW_NUMBER() OVER(PARTITION BY DTTM, COUNTRY_CODE, PROJECT, PACKAGE_VERSION, INSTALLER_NAME, PYTHON_VERSION ORDER BY DTTM ASC)) = 1
             AND NOT PUSHED
             """
         return self.get_data_from_dw_service.query_to_dataframe(query=query)
