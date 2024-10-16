@@ -13,6 +13,9 @@ curl -X POST "https://api.datadoghq.com/api/v2/series" \
           "timestamp": $(date +%s),
           "value": 1
         }
+      ],
+      "tags": [
+        "repository:${REPOSITORY}"
       ]
     }
   ]
